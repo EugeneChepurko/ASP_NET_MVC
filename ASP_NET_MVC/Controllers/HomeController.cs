@@ -12,6 +12,8 @@ namespace ASP_NET_MVC.Controllers
     {
         public IActionResult Index()
         {
+            string regionCode = this.HttpContext.Items.ToString();
+            ViewData["Message"] = regionCode;
             return View();
         }
 
