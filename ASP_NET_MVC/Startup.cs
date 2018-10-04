@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using ASP_NET_MVC.Controllers;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -31,8 +32,8 @@ namespace ASP_NET_MVC
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
 
-
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+            services.AddTransient<HomeController>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -41,7 +42,6 @@ namespace ASP_NET_MVC
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
-
             }
             else
             {
@@ -52,7 +52,8 @@ namespace ASP_NET_MVC
             app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseCookiePolicy();
-
+            app.UseMiddleware<RegionCodes>();
+            
             app.UseMvc(routes =>
             {
                 routes.MapRoute(

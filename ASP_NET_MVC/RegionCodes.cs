@@ -11,17 +11,18 @@ namespace ASP_NET_MVC
     public class RegionCodes
     {
         private readonly RequestDelegate _next;
-        string[] regions = { "UA", "RU", "US", "FR", "AU" };
+        string[] regions = { "UA", "RU", "US", "FR", "AU", "BY", "BR", "DE" };
         Random random = new Random();
 
         public RegionCodes(RequestDelegate next)
         {
             _next = next;
         }
-
+        
         public Task Invoke(HttpContext httpContext)
         {
-            httpContext.Items["regions"] = "UA"/*random.Next(regions.Length)*/;
+
+            httpContext.Items["regions"] = regions[new Random().Next(0, regions.Length)]; 
             return _next(httpContext);
         }
     }
