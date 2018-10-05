@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
@@ -12,7 +10,6 @@ namespace ASP_NET_MVC
     {
         private readonly RequestDelegate _next;
         string[] regions = { "UA", "RU", "US", "FR", "AU", "BY", "BR", "DE" };
-        Random random = new Random();
 
         public RegionCodes(RequestDelegate next)
         {
@@ -21,7 +18,6 @@ namespace ASP_NET_MVC
         
         public Task Invoke(HttpContext httpContext)
         {
-
             httpContext.Items["regions"] = regions[new Random().Next(0, regions.Length)]; 
             return _next(httpContext);
         }

@@ -1,14 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using ASP_NET_MVC.Models;
 using Microsoft.Extensions.Configuration;
-using System.Net;
-using System.Net.Sockets;
-using System.Net.NetworkInformation;
 
 namespace ASP_NET_MVC.Controllers
 {
@@ -22,8 +17,12 @@ namespace ASP_NET_MVC.Controllers
 
         public IActionResult Index()
         {
+            string machineName = Environment.MachineName;
+            OperatingSystem systemVer = Environment.OSVersion;
             string regionCode = this.HttpContext.Items["regions"].ToString();
             ViewData["Message"] = "Your region - " + regionCode;
+            ViewData["MachineName"] = "Your machine name - " + machineName;
+            ViewData["SystemVer"] = "Your system version - " + systemVer;
             ViewData["MessageLocalIP"] = "Your local IP - " + GetLocalIPAddress();
             ViewData["MessageMACAddress"] = "Your MAC address - " + GetMacAddress();
             return View();
@@ -53,17 +52,17 @@ namespace ASP_NET_MVC.Controllers
         }
         private static string GetLocalIPAddress()
         {
-            var host = Dns.GetHostEntry(Dns.GetHostName());
+            System.Net.IPHostEntry host = System.Net.Dns.GetHostEntry(System.Net.Dns.GetHostName());
             {
                 foreach (var ip in host.AddressList)
-                    if (ip.AddressFamily == AddressFamily.InterNetwork)
+                    if (ip.AddressFamily == System.Net.Sockets.AddressFamily.InterNetwork)
                     { return ip.ToString(); }
             }
             throw new Exception("No network adapters with an IPv4 address in the system!");
         }
         private static string GetMacAddress()
         {
-            return NetworkInterface.GetAllNetworkInterfaces().Where(nic => nic.OperationalStatus == OperationalStatus.Up).Select(nic => nic.GetPhysicalAddress().ToString()).FirstOrDefault();
+            return System.Net.NetworkInformation.NetworkInterface.GetAllNetworkInterfaces().Where(nic => nic.OperationalStatus == System.Net.NetworkInformation.OperationalStatus.Up).Select(nic => nic.GetPhysicalAddress().ToString()).FirstOrDefault();
         }
     }
 }
